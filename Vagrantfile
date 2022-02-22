@@ -26,6 +26,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8080, host: 28080
   config.vm.network "forwarded_port", guest: 9443, host: 29443
   config.vm.network "forwarded_port", guest: 80, host: 20080  
+  config.vm.network "forwarded_port", guest: 443, host: 20443
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine and only allow access
   # via 127.0.0.1 to disable public access
@@ -95,14 +96,13 @@ Vagrant.configure("2") do |config|
       --network docker-net \
       httpd
 
-    docker run -d -p 80:80 --name nginx \
+    docker run -d -p 80:80 443:443 --name nginx \
       --restart=unless-stopped \
       -v /opt/nginx/nginx.conf:/etc/nginx/nginx.conf \
       -v /opt/nginx/conf.d:/etc/nginx/conf.d/ \
+      -v /etc/ssl:/etc/ssl/ \
       --network docker-net \
       nginx
-    
-     
 
-  SHELL
+SHELL
 end
